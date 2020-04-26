@@ -71,7 +71,10 @@ In `package.json`
     },
     "coverageOptions": {
       // Options here
-    }
+    },
+    "addFiles": [
+      // Absolute file paths
+    ]
   }
 }
 ```
@@ -107,6 +110,12 @@ jest-runner-mocha has some optional configuration for code coverage
 |option|example|description|
 |-----|-----|-----|
 |useBabelRc|`"useBabelRc": true`|read .babelrc when instrumenting for code coverage (required if you transpile your code with babel).|
+
+### addFiles
+
+If you want to include additional files (for example additional Mocha setup code), you can list the files that you want added.
+
+This value can be a string or an array of absolute file paths.
 
 ### Coverage
 

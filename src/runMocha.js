@@ -3,8 +3,19 @@ const toTestResult = require('./utils/toTestResult');
 const setupCollectCoverage = require('./utils/setupCollectCoverage');
 const getMochaOptions = require('./utils/getMochaOptions');
 
+function clearModuleCache(file) {
+  const inCache = require.cache[file] !== undefined;
+  if (inCache) {
+    delete require.cache[file];
+  }
+}
+
 const runMocha = ({ config, testPath, globalConfig }, workerCallback) => {
-  const { cliOptions: mochaOptions, coverageOptions } = getMochaOptions(config);
+  const {
+    cliOptions: mochaOptions,
+    coverageOptions,
+    addFiles,
+  } = getMochaOptions(config);
 
   class Reporter extends Mocha.reporters.Base {
     constructor(runner) {
@@ -63,6 +74,11 @@ const runMocha = ({ config, testPath, globalConfig }, workerCallback) => {
   if (mochaOptions.file) {
     mochaOptions.file.forEach(file => mocha.addFile(file));
   }
+
+  addFiles.forEach((file) => {
+    clearModuleCache(file);
+    mocha.addFile(file);
+  });
 
   mocha.addFile(testPath);
 
